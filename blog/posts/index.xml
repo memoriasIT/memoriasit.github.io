@@ -1,12 +1,93 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on</title><link>https://memoriasit.com/blog/posts/</link><description>Recent content in Posts on</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 25 Jan 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://memoriasit.com/blog/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Hello Friend</title><link>https://memoriasit.com/blog/posts/hello/</link><pubDate>Fri, 25 Jan 2019 00:00:00 +0000</pubDate><guid>https://memoriasit.com/blog/posts/hello/</guid><description>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec interdum metus. Aenean rutrum ligula sodales ex auctor, sed tempus dui mollis. Curabitur ipsum dui, aliquet nec commodo at, tristique eget ante. Donec quis dolor nec nunc mollis interdum vel in purus. Sed vitae leo scelerisque, sollicitudin elit sed, congue ante. In augue nisl, vestibulum commodo est a, tristique porttitor est. Proin laoreet iaculis ornare. Nullam ut neque quam.
-Fusce pharetra suscipit orci nec tempor.</description><content>&lt;p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec interdum metus. Aenean rutrum ligula sodales ex auctor, sed tempus dui mollis. Curabitur ipsum dui, aliquet nec commodo at, tristique eget ante. &lt;strong>Donec quis dolor nec nunc mollis interdum vel in purus&lt;/strong>. Sed vitae leo scelerisque, sollicitudin elit sed, congue ante. In augue nisl, vestibulum commodo est a, tristique porttitor est. Proin laoreet iaculis ornare. Nullam ut neque quam.&lt;/p>
-&lt;blockquote>
-&lt;p>Fusce pharetra suscipit orci nec tempor. Quisque vitae sem sit amet sem mollis consequat. Sed at imperdiet lorem. Vestibulum pharetra faucibus odio, ac feugiat tellus sollicitudin at. Pellentesque varius tristique mi imperdiet dapibus. Duis orci odio, sodales lacinia venenatis sit amet, feugiat et diam.&lt;/p>
-&lt;/blockquote>
-&lt;p>Sed a leo id risus venenatis vulputate non quis nulla. Aenean nisl quam, lacinia pulvinar orci sit amet, eleifend eleifend dui. Nulla tempor ligula leo, eu vehicula quam condimentum a. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla gravida tristique nunc sed semper. Morbi nec felis odio.&lt;/p>
-&lt;ul>
-&lt;li>Sed efficitur, lacus ac scelerisque pellentesque, lectus risus dignissim nisl, fermentum semper lectus diam eget lacus.&lt;/li>
-&lt;li>Nunc ornare purus enim, id eleifend mauris vestibulum volutpat.&lt;/li>
-&lt;li>Aenean facilisis ut ipsum condimentum ultrices.&lt;/li>
-&lt;li>Fusce sed metus vulputate, lobortis purus et, finibus purus. Suspendisse quis posuere lorem. Vivamus vulputate nec risus in pulvinar.&lt;/li>
-&lt;/ul></content></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on </title>
+    <link>http://localhost:1313/blog/posts/</link>
+    <description>Recent content in Posts on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Fri, 13 Dec 2024 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/blog/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Scanning for vulnarabilities in your dependencies</title>
+      <link>http://localhost:1313/blog/posts/20241213-osvscanner/</link>
+      <pubDate>Fri, 13 Dec 2024 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/blog/posts/20241213-osvscanner/</guid>
+      <description>&lt;p&gt;A while ago, I was working for a client that had a specific requirement: they wanted to check for the &lt;a href=&#34;https://owasp.org/www-project-top-ten/&#34;&gt;OWASP top ten security risks&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;If you are not aware of what these lists are, OWASP is a well known non-profit organization that provides security related resources. They also make these security reports which take into account their own data and the community&amp;rsquo;s to list the top ten most common security risks of that year.&lt;/p&gt;</description>
+      <content>&lt;p&gt;A while ago, I was working for a client that had a specific requirement: they wanted to check for the &lt;a href=&#34;https://owasp.org/www-project-top-ten/&#34;&gt;OWASP top ten security risks&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;If you are not aware of what these lists are, OWASP is a well known non-profit organization that provides security related resources. They also make these security reports which take into account their own data and the community&amp;rsquo;s to list the top ten most common security risks of that year.&lt;/p&gt;
+&lt;p&gt;One of the top vulnerabilities is usually using &amp;ldquo;Vulnerable and Outdated Components&amp;rdquo; and this made me wonder if I can automate something to check for known vulnerable dependencies.&lt;/p&gt;
+&lt;p&gt;Luckily for me, Google already made a great scanner for this that works with many languages (C++, Dart, Go, Java, Python…). Their solution is called &lt;a href=&#34;https://google.github.io/osv-scanner/&#34;&gt;OSVScanner&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;This scanner uses the &lt;a href=&#34;https://osv.dev/&#34;&gt;OSV Database&lt;/a&gt; as backbone (a vulnerability database for open source projects).&lt;/p&gt;
+&lt;p&gt;Today, I will show you how you can very easily implement this in your workflows.&lt;/p&gt;
+&lt;h1 id=&#34;installing-the-tool&#34;&gt;Installing the tool&lt;/h1&gt;
+&lt;p&gt;If you use a package manager, this might be your best bet. For example, for macOS you can just use brew:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;brew install osv-scanner
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;However, you can also install from source (you need to Go installed):&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;go install github.com/google/osv-scanner/cmd/osv-scanner@v1
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Pre-compiled releases can also be found in their GitHub (inb4 &lt;a href=&#34;https://www.reddit.com/r/github/comments/1at9br4/i_am_new_to_github_and_i_have_lots_to_say/&#34;&gt;just give me the freaking EXE&lt;/a&gt;):&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/google/osv-scanner/releases&#34;&gt;https://github.com/google/osv-scanner/releases&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id=&#34;usage&#34;&gt;Usage&lt;/h1&gt;
+&lt;p&gt;Using it is also really easy, just specify a path or lockfile and it will do its magic!&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;❯ os-scanner -r .
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Scanning dir .
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Scanning /Users/me/example/ at commit redacted
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;No issues found
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If it finds something, it will look like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;❯ osv-scanner --lockfile &amp;#39;pubspec.lock&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Scanned /Users/me/example/pubspec.lock file and found 204 packages
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;╭─────────────────────────────────────┬──────┬───────────┬────────────────────────────┬─────────┬──────────────╮
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;│ OSV URL                             │ CVSS │ ECOSYSTEM │ PACKAGE                    │ VERSION │ SOURCE       │
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├─────────────────────────────────────┼──────┼───────────┼────────────────────────────┼─────────┼──────────────┤
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;│ https://osv.dev/GHSA-3hpf-ff72-j67p │ 3.0  │ Pub       │ shared_preferences_android │ 2.3.3   │ pubspec.lock │
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;╰─────────────────────────────────────┴──────┴───────────┴────────────────────────────┴─────────┴──────────────╯
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The output will either be &amp;ldquo;No issues found&amp;rdquo;, or a table like the one above.
+In the table you will find a link to the OSV database, the common vulnerability score (CVSS), the ecosystem (Go, crates, Pub, etc.), the package name and version and where the dependency was found.&lt;/p&gt;
+&lt;p&gt;Usually the workarounds and fixes are pretty easy and detailed in the OSV database entry.&lt;/p&gt;
+&lt;h1 id=&#34;usage-in-cicd&#34;&gt;Usage in CI/CD&lt;/h1&gt;
+&lt;p&gt;Google does provide some &lt;a href=&#34;https://github.com/google/osv-scanner-action/tree/main/.github/workflows&#34;&gt;reusable PR workflows&lt;/a&gt; you can use. There is also &lt;a href=&#34;https://google.github.io/osv-scanner/github-action/&#34;&gt;documentation&lt;/a&gt; to use them. However, I find them more complex than they should really be.&lt;/p&gt;
+&lt;p&gt;The program already returns 0 or 1 if it found something, so we can just use the same setup as locally and it will work automatically.
+I hereby provide an example job that would do the trick:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Checkout the code&lt;/li&gt;
+&lt;li&gt;Set up the Go version&lt;/li&gt;
+&lt;li&gt;Install from source and run&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;vulnerability-checker&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;🦠️Vulnerability check&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;runs-on&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;ubuntu-24.04&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;🔑Setup repo SSH key&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;uses&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;shimataro/ssh-key-action@v2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;with&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;key&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;${{ secrets.SSH_KEY }}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;known_hosts&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;${{ secrets.SSH_KNOWN_HOSTS }}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;if_key_exists&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;ignore&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;📚Checkout code&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;uses&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;actions/checkout@v3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;with&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;ref&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;${{ github.head_ref }}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;fetch-depth&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Set up Go&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;uses&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;actions/setup-go@v2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;with&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;go-version&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;1.23.3&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;🦠️ Vulnerability Check&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;run&lt;/span&gt;: |&lt;span style=&#34;color:#e6db74&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;        go install github.com/google/osv-scanner/cmd/osv-scanner@v1
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;        osv-scanner -lockfile=./pubspec.lock&lt;/span&gt;        
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you have the luxury of running on macOS images, you can skip the set up Go step and just use brew as I showed in the &lt;a href=&#34;http://localhost:1313/blog/blog/posts/20241213-osvscanner/#installing-the-tool&#34;&gt;installation&lt;/a&gt; section. And obviously, if you are self-hosting, you don’t need to install it every time.&lt;/p&gt;
+&lt;h1 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h1&gt;
+&lt;p&gt;We found out that running a vulnerability scanner is one of those low effort, high impact changes to implement.
+To be fair, I am not sure why it is not something more popular or talked about, at least in the Flutter world.
+Hopefully this blog post is able to convince at least one more reader out in the world to implement it in their system :)&lt;/p&gt;
+&lt;p&gt;Please let me know your thoughts or concerns, either in the comments or in any of my &lt;a href=&#34;https://memoriasit.com/links&#34;&gt;social media platforms&lt;/a&gt;.&lt;/p&gt;
+</content>
+    </item>
+    
+  </channel>
+</rss>
