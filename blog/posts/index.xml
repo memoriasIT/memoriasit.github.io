@@ -8,6 +8,71 @@
     <language>en</language>
     <lastBuildDate>Fri, 13 Dec 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://memoriasit.com/blog/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>Generating a changelog from your git commits</title>
+      <link>https://memoriasit.com/blog/posts/20241221-generatechangelog/</link>
+      <pubDate>Fri, 13 Dec 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://memoriasit.com/blog/posts/20241221-generatechangelog/</guid>
+      <description>&lt;p&gt;If you do some kind of software development, you probably are familiar with changelogs. These changelogs are especially useful for other people who don&amp;rsquo;t work on your project to at a glance know what&amp;rsquo;s new in X version.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-markdown&#34; data-lang=&#34;markdown&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;# 8.1.4
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;-&lt;/span&gt; docs: improve diagrams
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;-&lt;/span&gt; chore: update copyright year
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;-&lt;/span&gt; chore: update sponsors
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;# 8.1.3
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;-&lt;/span&gt; chore: update sponsors
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;However, maintaining this kind of files is always a pain and requires a lot of manual labor. Today, I will show you how we can achieve something similar with only using git.
+For that, we will leverage the &lt;code&gt;git log&lt;/code&gt; command.&lt;/p&gt;</description>
+      <content>&lt;p&gt;If you do some kind of software development, you probably are familiar with changelogs. These changelogs are especially useful for other people who don&amp;rsquo;t work on your project to at a glance know what&amp;rsquo;s new in X version.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-markdown&#34; data-lang=&#34;markdown&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;# 8.1.4
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;-&lt;/span&gt; docs: improve diagrams
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;-&lt;/span&gt; chore: update copyright year
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;-&lt;/span&gt; chore: update sponsors
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;# 8.1.3
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;-&lt;/span&gt; chore: update sponsors
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;However, maintaining this kind of files is always a pain and requires a lot of manual labor. Today, I will show you how we can achieve something similar with only using git.
+For that, we will leverage the &lt;code&gt;git log&lt;/code&gt; command.&lt;/p&gt;
+&lt;h1 id=&#34;playing-with-git-log&#34;&gt;Playing with git log&lt;/h1&gt;
+&lt;p&gt;&lt;code&gt;git log&lt;/code&gt; is just a command to list your commits, however, it has an option called &lt;code&gt;pretty&lt;/code&gt; that allows you to print the output with a certain format.
+The full documentation can be seen &lt;a href=&#34;https://git-scm.com/docs/pretty-formats&#34;&gt;here&lt;/a&gt;, but I will quickly go over the custom formats and simplify it for you with examples.&lt;/p&gt;
+&lt;p&gt;The main idea is to use placeholders. For example:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;%H&lt;/code&gt; : commit hash&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;%an&lt;/code&gt; : author name&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;%b&lt;/code&gt; : body&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;With that in mind, we can just clone a repository (with some depth to get the git history) and run Git log:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;❯ git clone https://github.com/felangel/bloc.git --depth 20
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;❯ git log --pretty=&amp;#39;format:%s | %an - %h&amp;#39; | tail -n 5
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docs: adjust sponsor grid columns (#4304) | Felix Angelov - 5ca35a7
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;chore(bloc_lint): remove parabeac from sponsors grid | Felix Angelov - a3aed13
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ci: upgrade `pana` to `0.22.17` (#4303) | Felix Angelov - 5bd7404
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;chore: remove parabeac from sponsors (#4302) | Felix Angelov - 92adcb5
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;chore(deps): bump astro from 4.16.9 to 4.16.18 in /docs (#4301) | dependabot[bot] - 54c224a
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As you can see, this is already pretty nice; especially because it is using &lt;a href=&#34;https://www.conventionalcommits.org/en/v1.0.0/&#34;&gt;conventional commits&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;To push this further, we can also play with tags. For example, we might only want to get the changelog since the last tag (only the new commits).&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;❯ git log $(git describe --tags --abbrev=0)..HEAD --pretty=&amp;#39;format:%s | %an - %h&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Note how in the example above I did not have to specify the tag name (I use the last one), but if you wanted, all you had to do is to specify the tag or commit.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;❯ git log a3aed13..HEAD --pretty=&amp;#39;format:%s | %an - %h&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docs: adjust sponsor grid columns (#4304) | Felix Angelov - 5ca35a7
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;chore(bloc_lint): remove parabeac from sponsors grid | Felix Angelov - a3aed13
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h1&gt;
+&lt;p&gt;Creating changelogs is always boring, but just like every boring thing in IT, we can automate it!&lt;/p&gt;
+&lt;p&gt;We just saw that just by using our git logs, we can generate beautiful output to use in our changelog.
+And obviously, this can even be run in your release workflows so zero manual labor is needed!&lt;/p&gt;
+&lt;p&gt;As always, feel free to send me a message!
+I would be very happy to hear your thoughts :)&lt;/p&gt;
+</content>
+    </item>
+    
+    <item>
       <title>Scanning for vulnerabilities in your dependencies</title>
       <link>https://memoriasit.com/blog/posts/20241213-osvscanner/</link>
       <pubDate>Fri, 13 Dec 2024 00:00:00 +0000</pubDate>
